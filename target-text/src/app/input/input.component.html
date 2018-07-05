@@ -1,0 +1,63 @@
+<form action="" class="ui form">
+    <h4 class="ui dividing header">Input</h4>
+    <div class="field">
+        <label>Target (English alphabets and spaces only)</label>
+    </div>
+    <div class="field">
+        <div class="ui input">
+            <input type="text" name="target" [(ngModel)] ="targetText" />
+        </div>
+    </div>
+    <div class="field">
+        <label>Population count</label>
+    </div>
+    <div class="field">
+        <div class="ui input">
+            <input [(ngModel)]="populationSize" name="population-size" placeholder="" />
+        </div>
+    </div>
+    <div class="field">
+        <label>Mutation rate (1 = 100%)</label>
+    </div>
+    <div class="field">
+        <div class="ui input">
+            <input type="text" name="mutation-rate" [(ngModel)]="mutationRate" />
+        </div>
+    </div>
+    <div class="inline fields">
+        <label>Scoring</label>
+        <div *ngFor="let evalType of evalTypes" class="field">
+            <div class="ui radio checkbox">
+                <input type="radio" name="eval" [value]="evalType.displayName" [checked]="evalType.selected" (click)="setEvalType(evalType.name)">
+                <label for="{{evalType.displayName}}">{{evalType.displayHtml}}</label>
+            </div>
+        </div>
+    </div>
+    <div class="inline fields">
+        <label>Mutation</label>
+        <div *ngFor="let mutationType of mutationTypes" class="field">
+            <div class="ui radio checkbox">
+                <input type="radio" name="mutation" [value]="mutationType.displayName" [checked]="mutationType.selected" (click)="setMutationType(mutationType.name)">
+                <label for="{{mutationType.displayName}}">{{mutationType.displayHtml}}</label>
+            </div>
+        </div>
+    </div>
+    <div class="field">
+        <label>Step duration</label>
+    </div>
+    <div class="field">
+        <div class="ui right labeled input">
+            <input type="text" name="step-duration" [(ngModel)]="stepDuration" />
+            <div class="ui basic label">
+                milliseconds
+            </div>
+        </div>
+    </div>
+    <button class="ui button" (click)="runIterations()">Run</button>
+    <button class="ui button" (click)="abortIterations()" >Abort</button>
+    <div class="field">
+        <label>
+            <span id="status">{{status}}</span>
+        </label>
+    </div>
+</form>

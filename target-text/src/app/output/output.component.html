@@ -1,0 +1,42 @@
+<h4 class="ui dividing header">Output</h4>
+<div *ngIf="output">
+    <table class="ui fixed table">
+        <tbody>
+            <tr>
+                <td>Generation</td>
+                <td> {{ output.generation }} </td>
+            </tr>
+            <tr>
+                <td>Best gene</td>
+                <td> {{ output.topGene.code }} </td>
+            </tr>
+            <tr>
+                <td>Best gene cost </td>
+                <td> {{ output.topGene.cost }} </td>
+            </tr>
+            <tr>
+                <td>Best gene fitness </td>
+                <td> {{ output.topGene.fitness }} </td>
+            </tr>
+        </tbody>
+    </table>
+    <button class="ui button" id="show-population">Show population</button>
+    <div class="fullscreen modal">
+        <table class="ui celled table" id="population-table" width="400">
+            <thead>
+                <tr>
+                    <th width="300">Code</th>
+                    <th width="100">Cost</th>
+                    <th width="100">Fitness</th>
+                </tr>
+            </thead>
+            <tbody>
+                <tr *ngFor="let e of output.elements">
+                    <td> {{e.code}} </td>
+                    <td> {{e.cost}} </td>
+                    <td> {{e.fitness}} </td>
+                </tr>
+            </tbody>
+        </table>
+    </div>
+</div>
