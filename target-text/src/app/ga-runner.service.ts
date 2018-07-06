@@ -5,16 +5,7 @@ import { BehaviorSubject } from 'rxjs';
 
 import * as _ from 'underscore';
 
-// TODO: namespacing?
-import {EvalType,
-        Config,
-        Gene,
-        Population,
-        randomPopulation,
-        randomGene,
-        evolve,
-        score
-       } from 'genkit';
+import * as gk from 'genkit';
 
 import {dnaCodes,
         distance,
@@ -30,7 +21,7 @@ import { GeneString, OutputMessage } from './output/output.component';
   providedIn: 'root'
 })
 export class GaRunnerService {
-    snapshot: BehaviorSubject<[Population, Gene]> = new BehaviorSubject<[Population, Gene]>([
+    snapshot: BehaviorSubject<[gk.Population, gk.Gene]> = new BehaviorSubject<[gk.Population, gk.Gene]>([
         {
             elements: [],
             generation: 0
@@ -70,10 +61,10 @@ export class GaRunnerService {
         let populationSize: number = config.populationSize;
         let mutationRate: number = config.mutationRate;
         let evalFn = evalFns['cost'];
-        let evalType = EvalType.ET_COST;
+        let evalType = gk.EvalType.ET_COST;
         if (config.evalType === 'fitness') {
             evalFn = evalFns['fitness'];
-            evalType = EvalType.ET_FITNESS;
+            evalType = gk.EvalType.ET_FITNESS;
         }
         let mutateFn = mutateFns['updown'];
         if (config.mutationType === 'random') {
@@ -86,7 +77,7 @@ export class GaRunnerService {
             return evalFn.call(this, str, target);
         }
 
-        let gaconfig: Config = {
+        let gaconfig: gk.Config = {
             dnaCodes: dnaCodes,
             evalType: evalType,
             evalFn: evalFnWrapper,
@@ -94,7 +85,7 @@ export class GaRunnerService {
             mate: mateFn
         };
 
-        let p = randomPopulation(gaconfig, target.length, 50);
+        let p = gk.randomPopulation(gaconfig, target.length, 50);
 
         // Massive performance degradation due to running in
         // setInterval as compared to running in while(true) loop.
@@ -111,9 +102,11 @@ export class GaRunnerService {
         }, config.stepDuration || 0);
     }
 
-    iterate(gaconfig: Config, p: Population, mutationRate: number): [Population, boolean] {
-        p = score(gaconfig, p);
-        p.generation = p.generation + 1;
+    iterate(gaconfig: gk.Config, p: gk.Population, mutationRate: number): [gk.Population, boolean] {
+        p = gk.score(gaconfig, p);
+        // TODO: fix generation increament issue
+        // If we enable below line, the generation increases two two steps
+        // p.generation = p.generation + 1;
         let tg = _.max(p.elements, (e) => e.score);
         this.snapshot.next([p, tg]);
         let done: boolean = false;
@@ -121,15 +114,15 @@ export class GaRunnerService {
         if (this.checkConvergence(tg, gaconfig.evalType)) {
             done = true;
         }
-        p = evolve(gaconfig, p, mutationRate);
+        p = gk.evolve(gaconfig, p, mutationRate);
 
         return [p, done];
     }
 
-    checkConvergence(gene: Gene, evalType: EvalType): boolean {
-        if (evalType === EvalType.ET_COST && gene.cost === 0) {
+    checkConvergence(gene: gk.Gene, evalType: gk.EvalType): boolean {
+        if (evalType === gk.EvalType.ET_COST && gene.cost === 0) {
             return true;
-        } else if (evalType === EvalType.ET_FITNESS && gene.fitness === 1.0) {
+        } else if (evalType === gk.EvalType.ET_FITNESS && gene.fitness === 1.0) {
             return true;
         }
         return false;
@@ -157,7 +150,7 @@ export class GaRunnerService {
         });
     }
 
-    toString (gene: Gene): GeneString {
+    toString (gene: gk.Gene): GeneString {
         return {
             code: gene.code.join(''),
             cost: gene.cost,

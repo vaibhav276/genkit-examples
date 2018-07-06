@@ -20,23 +20,30 @@
             </tr>
         </tbody>
     </table>
-    <button class="ui button" id="show-population">Show population</button>
-    <div class="fullscreen modal">
-        <table class="ui celled table" id="population-table" width="400">
-            <thead>
-                <tr>
-                    <th width="300">Code</th>
-                    <th width="100">Cost</th>
-                    <th width="100">Fitness</th>
-                </tr>
-            </thead>
-            <tbody>
-                <tr *ngFor="let e of output.elements">
-                    <td> {{e.code}} </td>
-                    <td> {{e.cost}} </td>
-                    <td> {{e.fitness}} </td>
-                </tr>
-            </tbody>
-        </table>
+    <!--
+    <div class="ui styled accordion">
+        <div class="title">
+            <i class="dropdown icon"></i>
+            Show population
+        </div>
+        <div class="content">
+            <table class="ui celled table" width="400">
+                <thead>
+                    <tr>
+                        <th width="300">Code</th>
+                        <th width="100">Cost</th>
+                        <th width="100">Fitness</th>
+                    </tr>
+                </thead>
+                <tbody>
+                    <tr *ngFor="let e of output.elements">
+                        <td> {{e.code}} </td>
+                        <td> {{e.cost}} </td>
+                        <td> {{e.fitness}} </td>
+                    </tr>
+                </tbody>
+            </table>
+        </div>
     </div>
+    -->
 </div>
